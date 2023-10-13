@@ -1,15 +1,8 @@
 /** @type {import('tailwindcss').Config} */
-const daisyui = require('daisyui');
-
 module.exports = {
-  purge: [],
-  content: [],
-  darkMode: 'class',
-  theme: {
-    extend: {},
+  content: ['./src/**/*.{html,js,ts}'],
+  daisyui: {
+    themes: ['light', 'night', 'aqua'],
   },
-  variants: {
-    extend: {},
-  },
-  plugins: [daisyui],
+  plugins: [require("daisyui")],
 };
