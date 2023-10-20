@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ElasticService } from '../elastic.service';
 
 @Component({
   selector: 'app-searchbox',
@@ -6,5 +7,13 @@ import { Component } from '@angular/core';
   styleUrls: ['./searchbox.component.css']
 })
 export class SearchboxComponent {
+  query = '';
+  results: any;
+  constructor(private elasticService: ElasticService) {}
 
+  search() {
+    this.elasticService.search(this.query).subscribe((data) => {
+      this.results = data;
+    });
+  }
 }

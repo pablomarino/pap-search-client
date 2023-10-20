@@ -1,3 +1,4 @@
+<!--
 <form>
     <div class="flex justify-center p-8">
         <label for="search-dropdown" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Your
@@ -41,3 +42,33 @@
         </div>
     </div>
 </form>
+-->
+<div class="p-20"> <!-- class="min-h-screen bg-base-200"> -->
+  <div> <!--  class="margin-5 Sflex-col lg:flex-row-reverse"> -->
+    <div>
+      <h1 class="text-5xl font-bold">Let's Search!</h1>
+      <p class="py-6">Enter a term to search across multiple public administration publications.</p>
+    </div>
+
+    <div class="join">
+      <div>
+        <div>
+          <input class="input input-bordered join-item" placeholder="Search"/>
+        </div>
+      </div>
+      <select class="select select-bordered  w-full max-w-xs join-item">
+        <option disabled selected>Select publication</option>
+        <option>all</option>
+        <option>DOGa</option>
+        <option>BOPA</option>
+        <option>BOE</option>
+      </select>
+      <div class="indicator">
+        <button class="btn join-item">Search</button>
+      </div>
+    </div>
+
+    <div class="filters"></div>
+  </div>
+</div>
+
