@@ -16,13 +16,13 @@ import { ContentComponent } from './content/content.component';
     SearchboxComponent,
     HeaderComponent,
     FooterComponent,
-    ContentComponent
+    ContentComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

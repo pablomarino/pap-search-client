@@ -10,8 +10,10 @@ export class ElasticService {
 
   constructor(private http: HttpClient) { }
 
-  search(query: string) {
-    const elasticQuery = {
+  search(query: any) {
+
+  /*
+  const elasticQuery = {
         "query": {
           "range": {
             "document_page": {
@@ -21,9 +23,9 @@ export class ElasticService {
           }
         }
     };
-
-    let response =  this.http.post(this.elasticsearchUrl + 'doga/_search', elasticQuery);
-console.log(response)
+    */
+    console.log("QUERY -------> ",query)
+    let response =  this.http.get(this.elasticsearchUrl + 'doga/_search', query);
     return response
   }
 
