@@ -10,13 +10,20 @@ export class ElasticService {
 
   search(query: any) {
     const elasticsearchUrl = 'http://localhost:9200/';
-    const index = 'doga';
+    const index = 'pap';
     //const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     //const options = { headers: headers, body: query };
-
-    const options = query;
-
-    let response = this.http.post(elasticsearchUrl + index +'/_search?size=50&pretty=true', options);
+    //const options = query;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        //'Access-Control-Allow-Origin': '*', // Set the allowed origin
+        //'Access-Control-Allow-Headers': 'Content-Type',
+        //'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+        //'Access-Control-Allow-Credentials': 'true'
+      }),
+    };
+    let response = this.http.post(elasticsearchUrl + index +'/_search?size=50&pretty=true', query, httpOptions);
     return response
   }
 }
