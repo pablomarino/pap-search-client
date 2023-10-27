@@ -1,10 +1,6 @@
-
 <div class="flex justify-center items-center">
-  <form
-    class="px-20 pt-40 mx-auto"
-    #searchForm="ngForm"
-    (ngSubmit)="search(searchForm.value)"
-  >
+  <form class="px-20 pt-40 mx-auto" #searchForm="ngForm" (ngSubmit)="search(searchForm.value)">
+    <!-- Cabecera -->
     <div>
       <h1 class="text-5xl font-bold">Let's Search!</h1>
       <p class="py-6">
@@ -12,27 +8,16 @@
         publications.
       </p>
     </div>
-
-    <div class="join">
-      <div>
-        <div>
-          <input
-            class="input input-bordered join-item"
-            placeholder="Search term"
-            type="text"
-            id="searchTerm"
-            name="searchTerm"
-            ngModel
-            required
-          />
+    <!-- Busqueda -->
+    <div class="join w-full">
+      <div class = "w-full">
+        <div classs = "w-full">
+          <input class="input input-bordered join-item w-full" placeholder="Search term" type="text" id="searchTerm"
+            name="searchTerm" ngModel required />
         </div>
       </div>
-      <select
-        class="select select-bordered w-full max-w-xs join-item"
-        id="documentType"
-        name="documentType"
-        [(ngModel)]="selectedDocumentType"
-      >
+      <select class="select select-bordered w-1/5 max-w-xs join-item" id="documentType" name="documentType"
+        [(ngModel)]="selectedDocumentType">
         <option *ngFor="let element of documentTypes" value="{{ element }}">
           {{ element }}
         </option>
@@ -41,66 +26,52 @@
         <button class="btn join-item" type="submit">Search</button>
       </div>
     </div>
+    <!-- Mensajes de resultado -->
+    <div class="alert alert-success my-5" *ngIf="search_result_success">
+      <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <span>{{search_success_message}}</span>
+    </div>
 
+    <div class="alert alert-error my-5" *ngIf="search_result_error">
+      <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <span>{{search_error_message}}</span>
+    </div>
+    <!-- Filtros de busqueda -->
     <div class="filters"></div>
   </form>
 </div>
 
-<div class="flex flex-col w-full border-opacity-50">
-  <div class="form-control">
 
-    <ul class="grid ">
-      <li >
-        <label class="w-1/3 cursor-pointer label"  *ngFor="let filter of search_filters">{{filter}}
-          <input type="checkbox"  class="checkbox-XS" />
-        </label>
-      </li>
-    </ul>
 
-  </div>
-  <div class="divider">OR</div>
-  <div class="form-control">
-    <label class="label cursor-pointer">
-      <span class="label-text">Remember me</span>
-      <input type="checkbox" checked="checked" class="checkbox" />
-    </label>
-  </div>
-</div>
+<div class="px-20 py-10
+            grid grid-cols-1 gap-6
+            sm:grid-cols-1
+            lg:grid-cols-3 lg:gap-8 ">
+  <span class="loading loading-bars loading-md" *ngIf="loading"></span>
 
-<div class="px-20 py-10 grid grid-cols-1 gap-6 lg:gap-8 sm:grid-cols-2 lg:grid-cols-3 ">
-    <span class="loading loading-bars loading-md" *ngIf="loading"></span>
-
-  <div *ngFor="let element of results" class="card shadow-xl">
+  <div *ngFor="let element of pagedResults" class="card shadow-xl">
     <div class="card-body">
       <h2 class="card-title">
         <span class="badge badge-primary badge-md">{{ element._source.publication_id }} {{
           element._source.document_number
-        }}</span>
+          }}</span>
         page {{ element._source.document_page }}
       </h2>
+      <p>Relevance Score: {{ element._score }}</p>
       <p class="line-clamp-5">{{ element._source.announcement_summary }}</p>
       <div class="card-actions justify-end">
         <button class="btn btn-primary">Open</button>
       </div>
     </div>
   </div>
-
-
-  <!--
-          <option value="All">All</option>
-        <option value="DOGa">DOGa</option>
-        <option value="BOPA">BOPA</option>
-        <option value="BOE">BOE</option>
--->
-
-  <!--
-<div *ngFor="let element of results">
-  <div>
-    {{ element._source.publication_id }} Nº {{ element._source.document_number }} página {{ element._source.document_page }}
-  </div>
-  <div>
-    {{ element._source.announcement_summary }}
-  </div>
 </div>
 
---></div>
+<div class="join flex justify-center items-center py-10 w-full">
+  <button class="join-item btn"  *ngFor="let page of pages" (click)="goToPage(page)">{{page}}</button>
+</div>
