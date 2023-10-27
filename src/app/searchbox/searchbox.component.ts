@@ -18,8 +18,10 @@ export class SearchboxComponent {
   selectedDocumentType: string = "All";
 
   search_result_error: boolean = false;
+  search_result_none: boolean = false;
   search_result_success: boolean = false;
-  search_error_message: string = "No se han encontrado resultados para la búsqueda realizada."
+  search_error_message: string = "Se ha producido un error al realizar la búsqueda."
+  search_none_message: string = "No se han encontrado resultados para la búsqueda realizada."
   search_success_message: string = "";// = "Se han encontrado {{}} resultados para la búsqueda realizada."
 
   pagedResults: any[] | undefined; // Results for the current page
@@ -56,16 +58,20 @@ export class SearchboxComponent {
         this.loading = false;
         this.results = data.hits.hits;
         this.search_result_error = false;
-        this.search_result_success = true;
+        this.search_result_none = false;
+
         if (this.results.length == 0) {
+          this.search_result_none = true;
           this.search_success_message = `No se han encontrado resultados para la búsqueda realizada.`;
         } else {
+          this.search_result_success = true;
           this.search_success_message = `Se han encontrado ${this.results.length} resultados para la búsqueda realizada.`;
         }
         /*setTimeout(() => {
           this.search_result_success = false;
         }, 5000);*/
         timer(2000).subscribe(() => {
+          this.search_result_none = false;
           this.search_result_success = false;
         });
         this.updatePagedResults();
