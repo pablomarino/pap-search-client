@@ -1,6 +1,6 @@
 # PAP Search Client
 
-Client to perform searches in public administration publications indexed information.
+Client to perform searches in public administration publications indexed information from project [PAP-Search](https://github.com/pablomarino/pap-search).
 
 ## Install.
 Install nodejs and npm. Then install angular-cli with `npm install -g @angular/cli`.
