@@ -3,6 +3,8 @@ import { ElasticService } from '../elastic.service';
 import { NgFor } from '@angular/common';
 import { catchError } from 'rxjs/operators';
 import { timer, throwError } from 'rxjs';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-searchbox',
@@ -14,9 +16,11 @@ export class SearchboxComponent {
   results: any = [];
   loading: boolean = false;
 
+  // Document select
   documentTypes: string[] = ["All", "BOE", "BOPA", "DOGA"];
   selectedDocumentType: string = "All";
 
+  // Alert
   search_result_error: boolean = false;
   search_result_none: boolean = false;
   search_result_success: boolean = false;
@@ -24,21 +28,41 @@ export class SearchboxComponent {
   search_none_message: string = "No se han encontrado resultados para la búsqueda realizada."
   search_success_message: string = "";// = "Se han encontrado {{}} resultados para la búsqueda realizada."
 
+  // Filter issue
+  start_issue_value: number = 0;
+  end_issue_value: number = 0;
+  filter_issue_by_range: boolean = false;
+
+  // Filter DATE
+  start_date_value: number = 0;
+  end_date_value: number = 0;
+  filter_date_by_range: boolean = false;
+
+  // Filter page
+  start_page_value: number = 0;
+  end_page_value: number = 0;
+  filter_page_by_range: boolean = false;
+
+  // Pagination
   pagedResults: any[] | undefined; // Results for the current page
   currentPage: number = 1;
   itemsPerPage: number = 10; // Number of items per page
   pagesArray: number[] | undefined;
 
-  search_filters = ["Disposiciones generales", "Autoridades y personal", "Ceses", "Nombramientos", "Sustituciones", "Otras disposiciones", "Oposiciones y concursos", "Administración de justicia", "Anuncios", "Administración autonómica", "Administración local", "Otros anuncios"]
+  //search_filters = ["Disposiciones generales", "Autoridades y personal", "Ceses", "Nombramientos", "Sustituciones", "Otras disposiciones", "Oposiciones y concursos", "Administración de justicia", "Anuncios", "Administración autonómica", "Administración local", "Otros anuncios"]
 
   constructor(private elasticService: ElasticService) { }
 
   search(formData: any) {
     console.log('Realizando búsqueda con los siguientes parámetros:', formData.searchTerm, formData.documentType);
-
+    // loading
     this.loading = true;
+    // Alerts
     this.search_result_error = false;
+    this.search_result_none = false;
     this.search_result_success = false;
+    // pagination
+    this.currentPage = 1;
 
     this.query = { "query": { "match": { "announcement_summary": formData.searchTerm } } }
 
@@ -108,41 +132,3 @@ export class SearchboxComponent {
     }
   }
 }
-
-
-
-
-
-
-
-
-
-/*
-{
-  "query": {
-    "bool": {
-          "bool": {
-            "should": [
-              {
-                "match": {
-                  "announcement_content": "patata"
-                }
-              },
-              {
-                "match": {
-                  "announcement_summary": "patata"
-                }
-              }
-            ]
-          }
-  }
-}
-}
-
-"query": {
-    "multi_match": {
-      "query": "tu_termino_de_busqueda",
-      "fields": ["campo1", "campo2", "campo3", "campo4"]  // Lista de campos que deseas buscar
-    }
-  }
-*/

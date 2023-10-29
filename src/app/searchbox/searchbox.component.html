@@ -2,7 +2,7 @@
   <form class="px-20 pt-40 mx-auto" #searchForm="ngForm" (ngSubmit)="search(searchForm.value)">
     <!-- Cabecera -->
     <div>
-      <h1 class="text-5xl font-bold">Let's Search!</h1>
+      <h1 class="text-5xl text-primary font-bold">Let's Search!</h1>
       <p class="py-6">
         Enter a term to search across multiple public administration
         publications.
@@ -10,8 +10,8 @@
     </div>
     <!-- Busqueda -->
     <div class="join w-full">
-      <div class = "w-full">
-        <div classs = "w-full">
+      <div class="w-full">
+        <div classs="w-full">
           <input class="input input-bordered join-item w-full" placeholder="Search term" type="text" id="searchTerm"
             name="searchTerm" ngModel required />
         </div>
@@ -26,57 +26,215 @@
         <button class="btn join-item" type="submit">Search</button>
       </div>
     </div>
-    <!-- Mensajes de resultado -->
-    <div class="alert alert-success my-5" *ngIf="search_result_success">
-      <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-      <span>{{search_success_message}}</span>
+
+    <!-- Filtros -->
+    <div class="mt-6 collapse bg-base-200">
+      <input type="checkbox" class="peer" />
+      <div class="collapse-title ">
+
+
+        <div>
+          <p>do you fancy adding some filters to your query?</p>
+        </div>
+
+
+
+      </div>
+      <div class="collapse-content">
+
+
+
+        <!-- Filtros de busqueda -->
+        <div class="rounded rounded-xl shadow-xl mt-5 bg-neutral-100">
+
+          <!-- Issue -->
+
+          <div class="collapse py-2">
+            <input type="checkbox" class="peer" />
+            <div
+              class="collapse-title bg-neutral-100  text-gray-400 peer-checked:bg-neutral-100 peer-checked:text-primary">
+              Filter by Issue
+            </div>
+            <div class="collapse-content bg-neutral-100 text-black peer-checked:bg-neutral-100 peer-checked:text-black">
+              <div class="flex justify-between items-center w-full">
+                <div class="flex items-center w-full" *ngIf="!filter_issue_by_range">
+                  <label>Number</label>
+                  <input class="input input-bordered w-1/2 ml-5" type="number" id="start_issue" name="start issue"
+                    min="1" value="1">
+                </div>
+                <div class="flex items-center w-full" *ngIf="filter_issue_by_range">
+                  <label>From</label>
+                  <input class="input input-bordered w-1/2 ml-5" type="number" id="start_issue" name="start issue"
+                    min="1" value="1">
+                </div>
+                <div class="flex items-center w-full" *ngIf="filter_issue_by_range">
+                  <label>to</label>
+                  <input class="input input-bordered w-1/2 ml-5 " type="number" id="end_issue" name="end issue"
+                    min="{{start_issue_value}}">
+                </div>
+                <div class="flex items-center w-full">
+                  <label>Use range</label>
+                  <input type="checkbox" (change)="filter_issue_by_range=!filter_issue_by_range" class="toggle ml-5" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr>
+          <!-- Date -->
+
+
+          <div class="collapse  py-2">
+            <input type="checkbox" class="peer" />
+            <div
+              class="collapse-title bg-neutral-100  text-gray-400 peer-checked:bg-neutral-100 peer-checked:text-primary">
+              Filter by date
+            </div>
+            <div class="collapse-content bg-neutral-100 text-black peer-checked:bg-neutral-100 peer-checked:text-black">
+              <div class="flex justify-between items-center w-full">
+                <div class="flex items-center w-full" *ngIf="!filter_date_by_range">
+                  <label>Date</label>
+                  <input class="input input-bordered w-1/2 ml-5" type="date" id="start_date" name="start date" min="1"
+                    value="1">
+                </div>
+                <div class="flex items-center w-full" *ngIf="filter_date_by_range">
+                  <label>From</label>
+                  <input class="input input-bordered w-1/2 ml-5" type="date" id="start_date" name="start date" min="1"
+                    value="1">
+                </div>
+                <div class="flex items-center w-full" *ngIf="filter_date_by_range">
+                  <label>to</label>
+                  <input class="input input-bordered w-1/2 ml-5 " type="date" id="end_date" name="end date"
+                    min="{{start_date_value}}">
+                </div>
+                <div class="flex items-center w-full">
+                  <label>Use range</label>
+                  <input type="checkbox" (change)="filter_date_by_range=!filter_date_by_range" class="toggle ml-5" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr>
+
+          <!-- Page -->
+
+
+
+          <div class="collapse  py-2">
+            <input type="checkbox" class="peer" />
+            <div
+              class="collapse-title bg-neutral-100  text-gray-400 peer-checked:bg-neutral-100 peer-checked:text-primary">
+              Filter by page
+            </div>
+            <div class="collapse-content bg-neutral-100 text-black peer-checked:bg-neutral-100 peer-checked:text-black">
+              <div class="flex justify-between items-center w-full">
+                <div class="flex items-center w-full" *ngIf="!filter_page_by_range">
+                  <label>Number</label>
+                  <input class="input input-bordered w-1/2 ml-5" type="number" id="start_page" name="start page" min="1"
+                    value="1">
+                </div>
+                <div class="flex items-center w-full" *ngIf="filter_page_by_range">
+                  <label>From</label>
+                  <input class="input input-bordered w-1/2 ml-5" type="number" id="start_page" name="start page" min="1"
+                    value="1">
+                </div>
+                <div class="flex items-center w-full" *ngIf="filter_page_by_range">
+                  <label>to</label>
+                  <input class="input input-bordered w-1/2 ml-5 " type="number" id="end_page" name="end page"
+                    min="{{start_page_value}}">
+                </div>
+                <div class="flex items-center w-full">
+                  <label>Use range</label>
+                  <input type="checkbox" (change)="filter_page_by_range=!filter_page_by_range" class="toggle ml-5" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr>
+
+
+          <div class="collapse  py-2">
+            <input type="checkbox" class="peer" />
+            <div
+              class="collapse-title bg-neutral-100  text-gray-400 peer-checked:bg-neutral-100 peer-checked:text-primary">
+              Filter by ranking
+            </div>
+            <div
+              class="flex items-center justify-between collapse-content bg-neutral-100 text-black peer-checked:bg-neutral-100 peer-checked:text-black">
+              <span class="w-auto pr-5 uppercase">high</span>
+              <input class="w-full" type="range" min="0" max="100" value="25" class="range" step="25" />
+              <span class="w-auto pl-5 uppercase">low</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="alert alert-warning my-5" *ngIf="search_result_none">
-      <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
-      <span>{{search_none_message}}</span>
-    </div>
+      <!-- Mensajes de resultado -->
+  <div class="alert alert-success my-5" *ngIf="search_result_success">
+    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+    <span>{{search_success_message}}</span>
+  </div>
 
-    <div class="alert alert-error my-5" *ngIf="search_result_error">
-      <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-      <span>{{search_error_message}}</span>
-    </div>
-    <!-- Filtros de busqueda -->
-    <div class="filters"></div>
+  <div class="alert alert-warning my-5" *ngIf="search_result_none">
+    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+    </svg>
+    <span>{{search_none_message}}</span>
+  </div>
+
+  <div class="alert alert-error my-5" *ngIf="search_result_error">
+    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+    <span>{{search_error_message}}</span>
+  </div>
+<div class="flex justify-center items-center py-10 w-full">
+  <span class="loading loading-bars loading-md" *ngIf="loading"></span>
+</div>
   </form>
+
+
+
+
 </div>
 
-
-
+<!-- Resultados -->
 <div class="px-20 py-10
             grid grid-cols-1 gap-6
             sm:grid-cols-1
             lg:grid-cols-3 lg:gap-8 ">
-  <span class="loading loading-bars loading-md" *ngIf="loading"></span>
+
 
   <div *ngFor="let element of pagedResults" class="card shadow-xl">
     <div class="card-body">
       <h2 class="card-title">
-        <span class="badge badge-primary badge-md">{{ element._source.publication_id }} {{
-          element._source.document_number
-          }}</span>
-        page {{ element._source.document_page }}
+        <p class="line-clamp-1">{{ element._source.announcement_summary }}</p>
       </h2>
+      <h3 class="line-clamp-1">{{element._source.announcement_issuer}}</h3>
+      <div class="join flex justify-between items-center w-full">
+        <h3 class="badge badge-primary badge-md">
+          {{ element._source.publication_id }} {{
+          element._source.document_number
+          }}
+        </h3>
+        <h3>page {{ element._source.document_page }}</h3>
+      </div>
+
       <p>Relevance Score: {{ element._score }}</p>
-      <p class="line-clamp-5">{{ element._source.announcement_summary }}</p>
+      <p class="line-clamp-3 mt-5">{{ element._source.announcement_summary }}</p>
       <div class="card-actions justify-end">
         <button class="btn btn-primary">Open</button>
       </div>
     </div>
   </div>
 </div>
-
+<!-- paginación -->
 <div class="join flex justify-center items-center py-10 w-full">
-  <button class="join-item btn"  *ngFor="let page of pages" (click)="goToPage(page)">{{page}}</button>
+  <button class="join-item btn" *ngFor="let page of pages" (click)="goToPage(page)"
+    [ngClass]="{ 'btn-active': page === currentPage }">{{page}}</button>
 </div>
