@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './searchbox.component.html',
   styleUrls: ['./searchbox.component.css']
 })
+
 export class SearchboxComponent {
   query = {};
   results: any = [];
@@ -34,8 +35,8 @@ export class SearchboxComponent {
   filter_issue_by_range: boolean = false;
 
   // Filter DATE
-  start_date_value: number = 0;
-  end_date_value: number = 0;
+  start_date_value: string = '';
+  end_date_value: string = '';
   filter_date_by_range: boolean = false;
 
   // Filter page
@@ -43,13 +44,15 @@ export class SearchboxComponent {
   end_page_value: number = 0;
   filter_page_by_range: boolean = false;
 
+  // Filter Ranking
+  ranking_value: number = 100;
+
   // Pagination
   pagedResults: any[] | undefined; // Results for the current page
   currentPage: number = 1;
   itemsPerPage: number = 10; // Number of items per page
   pagesArray: number[] | undefined;
 
-  //search_filters = ["Disposiciones generales", "Autoridades y personal", "Ceses", "Nombramientos", "Sustituciones", "Otras disposiciones", "Oposiciones y concursos", "Administración de justicia", "Anuncios", "Administración autonómica", "Administración local", "Otros anuncios"]
 
   constructor(private elasticService: ElasticService) { }
 
@@ -130,5 +133,30 @@ export class SearchboxComponent {
       this.currentPage = page;
       this.updatePagedResults();
     }
+  }
+
+
+  check_issue_range_min(e: number){
+    if(this.start_issue_value >= this.end_issue_value){
+      this.end_issue_value = this.start_issue_value+1;
+    }
+  }
+  check_date_range_min(e: string){
+    if(this.start_date_value > this.end_date_value){
+
+      let fecha = new Date(this.start_date_value);
+      fecha.setDate(fecha.getDate() + 1);
+      // Obtiene el día siguiente en formato "YYYY-MM-DD"
+      this.end_date_value = fecha.toISOString().slice(0, 10).toString();
+    }
+
+  }
+  check_page_range_min(e: number){
+    if(this.start_page_value >= this.end_page_value){
+      this.end_page_value = this.start_page_value+1;
+    }
+  }
+  check_page_ranking(e:any){
+    console.log(e);
   }
 }

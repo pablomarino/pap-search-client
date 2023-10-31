@@ -28,23 +28,16 @@
     </div>
 
     <!-- Filtros -->
-    <div class="mt-6 collapse bg-base-200">
+    <div class="mt-6 collapse collapse-arrow bg-base-200">
       <input type="checkbox" class="peer" />
-      <div class="collapse-title ">
-
-
+      <div class="collapse-title text-secondary font">
         <div>
           <p>do you fancy adding some filters to your query?</p>
         </div>
-
-
-
       </div>
       <div class="collapse-content">
 
-
-
-        <!-- Filtros de busqueda -->
+        <!-- -->
         <div class="rounded rounded-xl shadow-xl mt-5 bg-neutral-100">
 
           <!-- Issue -->
@@ -60,17 +53,17 @@
                 <div class="flex items-center w-full" *ngIf="!filter_issue_by_range">
                   <label>Number</label>
                   <input class="input input-bordered w-1/2 ml-5" type="number" id="start_issue" name="start issue"
-                    min="1" value="1">
+                    min="1" value="1" [(ngModel)]="start_issue_value" (ngModelChange)="check_issue_range_min($event)">
                 </div>
                 <div class="flex items-center w-full" *ngIf="filter_issue_by_range">
                   <label>From</label>
                   <input class="input input-bordered w-1/2 ml-5" type="number" id="start_issue" name="start issue"
-                    min="1" value="1">
+                    min="1" value="1" [(ngModel)]="start_issue_value" (ngModelChange)="check_issue_range_min($event)">
                 </div>
                 <div class="flex items-center w-full" *ngIf="filter_issue_by_range">
                   <label>to</label>
                   <input class="input input-bordered w-1/2 ml-5 " type="number" id="end_issue" name="end issue"
-                    min="{{start_issue_value}}">
+                    min="{{start_issue_value+1}}"  [(ngModel)]="end_issue_value" (ngModelChange)="check_issue_range_min($event)">
                 </div>
                 <div class="flex items-center w-full">
                   <label>Use range</label>
@@ -94,20 +87,21 @@
                 <div class="flex items-center w-full" *ngIf="!filter_date_by_range">
                   <label>Date</label>
                   <input class="input input-bordered w-1/2 ml-5" type="date" id="start_date" name="start date" min="1"
-                    value="1">
+                    value="1" [(ngModel)]="start_date_value" (ngModelChange)="check_date_range_min($event)">
                 </div>
                 <div class="flex items-center w-full" *ngIf="filter_date_by_range">
                   <label>From</label>
                   <input class="input input-bordered w-1/2 ml-5" type="date" id="start_date" name="start date" min="1"
-                    value="1">
+                    value="1" [(ngModel)]="start_date_value" (ngModelChange)="check_date_range_min($event)">
                 </div>
                 <div class="flex items-center w-full" *ngIf="filter_date_by_range">
                   <label>to</label>
                   <input class="input input-bordered w-1/2 ml-5 " type="date" id="end_date" name="end date"
-                    min="{{start_date_value}}">
+                    min="{{start_date_value}}" [(ngModel)]="end_date_value" (ngModelChange)="check_date_range_min($event)">
                 </div>
                 <div class="flex items-center w-full">
                   <label>Use range</label>
+
                   <input type="checkbox" (change)="filter_date_by_range=!filter_date_by_range" class="toggle ml-5" />
                 </div>
               </div>
@@ -116,9 +110,6 @@
           <hr>
 
           <!-- Page -->
-
-
-
           <div class="collapse  py-2">
             <input type="checkbox" class="peer" />
             <div
@@ -130,17 +121,17 @@
                 <div class="flex items-center w-full" *ngIf="!filter_page_by_range">
                   <label>Number</label>
                   <input class="input input-bordered w-1/2 ml-5" type="number" id="start_page" name="start page" min="1"
-                    value="1">
+                    value="1"  [(ngModel)]="start_page_value" (ngModelChange)="check_page_range_min($event)">
                 </div>
                 <div class="flex items-center w-full" *ngIf="filter_page_by_range">
                   <label>From</label>
                   <input class="input input-bordered w-1/2 ml-5" type="number" id="start_page" name="start page" min="1"
-                    value="1">
+                    value="1" [(ngModel)]="start_page_value" (ngModelChange)="check_page_range_min($event)">
                 </div>
                 <div class="flex items-center w-full" *ngIf="filter_page_by_range">
                   <label>to</label>
                   <input class="input input-bordered w-1/2 ml-5 " type="number" id="end_page" name="end page"
-                    min="{{start_page_value}}">
+                    min="{{start_page_value}}"  [(ngModel)]="end_page_value" (ngModelChange)="check_page_range_min($event)">
                 </div>
                 <div class="flex items-center w-full">
                   <label>Use range</label>
@@ -150,8 +141,7 @@
             </div>
           </div>
           <hr>
-
-
+          <!-- Ranking -->
           <div class="collapse  py-2">
             <input type="checkbox" class="peer" />
             <div
@@ -161,7 +151,7 @@
             <div
               class="flex items-center justify-between collapse-content bg-neutral-100 text-black peer-checked:bg-neutral-100 peer-checked:text-black">
               <span class="w-auto pr-5 uppercase">high</span>
-              <input class="w-full" type="range" min="0" max="100" value="25" class="range" step="25" />
+              <input name="ranking" class="w-full" type="range" min="0" max="100" value="25" class="range" step="25" [(ngModel)]="ranking_value"/>
               <span class="w-auto pl-5 uppercase">low</span>
             </div>
           </div>
@@ -193,14 +183,10 @@
     </svg>
     <span>{{search_error_message}}</span>
   </div>
-<div class="flex justify-center items-center py-10 w-full">
-  <span class="loading loading-bars loading-md" *ngIf="loading"></span>
+<div class="flex justify-center items-center py-10 w-full" *ngIf="loading">
+  <span class="loading loading-bars loading-md"></span>
 </div>
   </form>
-
-
-
-
 </div>
 
 <!-- Resultados -->
@@ -238,3 +224,18 @@
   <button class="join-item btn" *ngFor="let page of pages" (click)="goToPage(page)"
     [ngClass]="{ 'btn-active': page === currentPage }">{{page}}</button>
 </div>
+
+
+
+
+<p>{{selectedDocumentType}}</p>
+<p>{{start_issue_value}}</p>
+<p>{{end_issue_value}}</p>
+<p>{{filter_issue_by_range}}</p>
+<p>{{start_date_value}}</p>
+<p>{{end_date_value}}</p>
+<p>{{filter_date_by_range}}</p>
+<p>{{start_page_value}}</p>
+<p>{{end_page_value}}</p>
+<p>{{filter_page_by_range}}</p>
+<p>{{ranking_value}}</p>
