@@ -29,10 +29,11 @@
 
     <!-- Filtros -->
     <div class="mt-6 collapse collapse-arrow bg-base-200">
-      <input type="checkbox" class="peer" />
+      <input name="collapse_main" type="checkbox" class="peer" [(ngModel)]="collapse_main_status"/>
+
       <div class="collapse-title text-secondary font">
         <div>
-          <p>do you fancy adding some filters to your query?</p>
+          <p>Do you fancy adding some filters to your query?</p>
         </div>
       </div>
       <div class="collapse-content">
@@ -43,9 +44,8 @@
           <!-- Issue -->
 
           <div class="collapse py-2">
-            <input type="checkbox" class="peer" />
-            <div
-              class="collapse-title bg-neutral-100  text-gray-400 peer-checked:bg-neutral-100 peer-checked:text-primary">
+            <input name="collapse_issue" type="checkbox" class="peer"  [(ngModel)]="collapse_issue_status"/>
+            <div  class="collapse-title bg-neutral-100  text-gray-400 peer-checked:bg-neutral-100 peer-checked:text-primary">
               Filter by Issue
             </div>
             <div class="collapse-content bg-neutral-100 text-black peer-checked:bg-neutral-100 peer-checked:text-black">
@@ -77,7 +77,7 @@
 
 
           <div class="collapse  py-2">
-            <input type="checkbox" class="peer" />
+            <input name="collapse_date" type="checkbox" class="peer"  [(ngModel)]="collapse_date_status"/>
             <div
               class="collapse-title bg-neutral-100  text-gray-400 peer-checked:bg-neutral-100 peer-checked:text-primary">
               Filter by date
@@ -111,7 +111,7 @@
 
           <!-- Page -->
           <div class="collapse  py-2">
-            <input type="checkbox" class="peer" />
+            <input name="collapse_page" type="checkbox" class="peer" [(ngModel)]="collapse_page_status"/>
             <div
               class="collapse-title bg-neutral-100  text-gray-400 peer-checked:bg-neutral-100 peer-checked:text-primary">
               Filter by page
@@ -143,7 +143,7 @@
           <hr>
           <!-- Ranking -->
           <div class="collapse  py-2">
-            <input type="checkbox" class="peer" />
+            <input name="collapse_ranking" type="checkbox" class="peer"  [(ngModel)]="collapse_ranking_status"/>
             <div
               class="collapse-title bg-neutral-100  text-gray-400 peer-checked:bg-neutral-100 peer-checked:text-primary">
               Filter by ranking
@@ -224,18 +224,3 @@
   <button class="join-item btn" *ngFor="let page of pages" (click)="goToPage(page)"
     [ngClass]="{ 'btn-active': page === currentPage }">{{page}}</button>
 </div>
-
-
-
-
-<p>{{selectedDocumentType}}</p>
-<p>{{start_issue_value}}</p>
-<p>{{end_issue_value}}</p>
-<p>{{filter_issue_by_range}}</p>
-<p>{{start_date_value}}</p>
-<p>{{end_date_value}}</p>
-<p>{{filter_date_by_range}}</p>
-<p>{{start_page_value}}</p>
-<p>{{end_page_value}}</p>
-<p>{{filter_page_by_range}}</p>
-<p>{{ranking_value}}</p>
