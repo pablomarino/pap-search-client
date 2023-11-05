@@ -6,6 +6,15 @@ import { timer, throwError } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
+
+// FIXME: input documento no refresca el valor
+// FIXME: Busqueda por fecha no funciona
+// TODO: ranking fuera de filtros, utilizarlo o eliminarlo?
+// TODO: mostrar valor de ranking de manera visual
+// TODO: Por ahora busca por contenido del sumario, añadir busqueda por categorias (oposiciones, concursos, etc.)
+// TODO: Mostrar toda la información en la ficha de cada resultado
+// TODO: Enlace al documento original funcionando
+
 @Component({
   selector: 'app-searchbox',
   templateUrl: './searchbox.component.html',
@@ -63,69 +72,77 @@ export class SearchboxComponent {
   constructor(private elasticService: ElasticService) { }
 
 
-  buildQuery():string {
+  buildQuery(): string {
 
     let searchterm_string = '';
+    let searchpublication_string = '';
     let searchissue_string = '';
     let searchdate_string = '';
     let searchpage_string = '';
 
     // Search Term
-    if(this.searchTerm.trim() === '' && this.collapse_main_status && (this.collapse_issue_status || this.collapse_date_status || this.collapse_page_status)){
+    if (this.searchTerm.trim() === '' && this.collapse_main_status && (this.collapse_issue_status || this.collapse_date_status || this.collapse_page_status)) {
       // If no search term is entered, but filters are used, I use 'match_all' to filter all results
       searchterm_string = '{ "match_all": { } }';
-    }else{
+    } else {
       searchterm_string = `{ "match": { "announcement_summary": "${this.searchTerm}" } }`
     }
 
     // Search Filters
-    if(this.collapse_main_status){
+    if (this.collapse_main_status) {
 
-      if(this.collapse_issue_status){
+      if (this.collapse_issue_status) {
         // está activo el filtro por numero de boletin
 
-        if(this.filter_issue_by_range){
+        if (this.filter_issue_by_range) {
           // se añade filtro para rango de numeros
-          searchissue_string=`{ "range": { "document_number": { "gte": ${this.start_issue_value}, "lte": ${this.end_issue_value} } } },`
-        }else{
+          searchissue_string = `{ "range": { "document_number": { "gte": ${this.start_issue_value}, "lte": ${this.end_issue_value} } } },`
+        } else {
           // se añade filtro para numero exacto
-          searchissue_string=`{ "term": { "document_number": ${this.start_issue_value} } },`
+          searchissue_string = `{ "term": { "document_number": ${this.start_issue_value} } },`
         }
-      }else{
+      } else {
         // no está activo el filtro por numero de boletin
-        searchissue_string='';
+        searchissue_string = '';
       }
 
-      if(this.collapse_date_status){
+      if (this.collapse_date_status) {
         // esta activo el filtro por fecha
-        if(this.filter_date_by_range){
+        if (this.filter_date_by_range) {
           // se añade filtro para rango de fechas
-          searchdate_string=`{ "range": { "publication_date": { "gte": "${this.start_date_value}T00:00:00.000000Z", "lte": "${this.end_date_value}T00:00:00.000000Z" } } },`
-        }else{
+          searchdate_string = `{ "range": { "publication_date": { "gte": "${this.start_date_value}T00:00:00.000000Z", "lte": "${this.end_date_value}T00:00:00.000000Z" } } },`
+        } else {
           // se añade filtro para fecha exacta
-          searchdate_string=`{ "term": { "publication_date": "${this.start_date_value}T00:00:00.000000Z" } },`
+          searchdate_string = `{ "term": { "publication_date": "${this.start_date_value}T00:00:00.000000Z" } },`
         }
-      }else{
+      } else {
         // no está activo el filtro por fecha
-        searchdate_string='';
+        searchdate_string = '';
       }
 
-      if(this.collapse_page_status){
+      if (this.collapse_page_status) {
         // esta activo el filtro por pagina
-        if(this.filter_page_by_range){
+        if (this.filter_page_by_range) {
           // se añade filtro para rango de paginas
-          searchpage_string=`{ "range": { "document_page": { "gte": ${this.start_page_value}, "lte": ${this.end_page_value} } } },`
-        }else{
+          searchpage_string = `{ "range": { "document_page": { "gte": ${this.start_page_value}, "lte": ${this.end_page_value} } } },`
+        } else {
           // se añade filtro para pagina exacta
-          searchpage_string=`{ "term": { "document_page": ${this.start_page_value} } },`
+          searchpage_string = `{ "term": { "document_page": ${this.start_page_value} } },`
         }
-      }else{
+      } else {
         // no está activo el filtro por pagina
-        searchpage_string='';
+        searchpage_string = '';
       }
+
+      if (this.selectedDocumentType != "All") {
+        searchpublication_string = `{ "term": { "publication_id": "${this.selectedDocumentType}" } },`
+      } else {
+        searchpublication_string = '';
+      }
+
     }
 
-
+    console.log("---------------> "+this.selectedDocumentType)
 
     const query: string = `{
       "query": {
@@ -134,6 +151,7 @@ export class SearchboxComponent {
             ${searchissue_string}
             ${searchdate_string}
             ${searchpage_string}
+            ${searchpublication_string}
             ${searchterm_string}
           ],
           "must_not": [],
@@ -144,43 +162,9 @@ export class SearchboxComponent {
       "size": 500,
       "sort": [],
       "aggs": {}
-    }`
+    }`;
+
     return query;
-
-    /*
-    let query_start:string = `{ "query": { "match": { "announcement_summary": "${this.searchTerm}" } } ` ;
-    let query_end:string = '}';
-
-    if(this.collapse_main_status){
-      query_start += ', "filter": {';
-      query_end = '}'+query_end;
-      if(this.collapse_issue_status){
-        if(this.filter_issue_by_range){
-          // se añade filtro para rango de numeros
-          query_start += `"range": { "announcement_issue": { "gte": "${this.start_issue_value}", "lte": "${this.end_issue_value}" } }`;
-        }else{
-          // se añade filtro para numero exacto
-        }
-      }else if(this.collapse_date_status){
-        if(this.filter_date_by_range){
-          // se añade filtro para rango de fechas
-        }else{
-          // se añade filtro para fecha exacta
-
-        }
-      }else if(this.collapse_page_status){
-        if(this.filter_page_by_range){
-          // se añade filtro para rango de paginas
-        }else{
-          // se añade filtro para pagina exacta
-        }
-      }else if(this.collapse_ranking_status){
-      }
-    }
-    return query_start+query_end;
-
-   return `{"query":{"match_all":{}}}`;
-   */
   }
 
   search(formData: any) {
@@ -270,13 +254,13 @@ export class SearchboxComponent {
   }
 
 
-  check_issue_range_min(e: number){
-    if(this.start_issue_value >= this.end_issue_value){
-      this.end_issue_value = this.start_issue_value+1;
+  check_issue_range_min(e: number) {
+    if (this.start_issue_value >= this.end_issue_value) {
+      this.end_issue_value = this.start_issue_value + 1;
     }
   }
-  check_date_range_min(e: string){
-    if(this.start_date_value > this.end_date_value){
+  check_date_range_min(e: string) {
+    if (this.start_date_value > this.end_date_value) {
 
       let fecha = new Date(this.start_date_value);
       fecha.setDate(fecha.getDate() + 1);
@@ -285,12 +269,12 @@ export class SearchboxComponent {
     }
 
   }
-  check_page_range_min(e: number){
-    if(this.start_page_value >= this.end_page_value){
-      this.end_page_value = this.start_page_value+1;
+  check_page_range_min(e: number) {
+    if (this.start_page_value >= this.end_page_value) {
+      this.end_page_value = this.start_page_value + 1;
     }
   }
-  check_page_ranking(e:any){
+  check_page_ranking(e: any) {
     console.log(e);
   }
 
