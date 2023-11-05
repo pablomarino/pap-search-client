@@ -6,14 +6,9 @@ import { timer, throwError } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-
-// FIXME: input documento no refresca el valor
 // FIXME: Busqueda por fecha no funciona
-// TODO: ranking fuera de filtros, utilizarlo o eliminarlo?
-// TODO: mostrar valor de ranking de manera visual
 // TODO: Por ahora busca por contenido del sumario, añadir busqueda por categorias (oposiciones, concursos, etc.)
-// TODO: Mostrar toda la información en la ficha de cada resultado
-// TODO: Enlace al documento original funcionando
+// TODO: Memoria
 
 @Component({
   selector: 'app-searchbox',
@@ -99,7 +94,7 @@ export class SearchboxComponent {
           searchissue_string = `{ "range": { "document_number": { "gte": ${this.start_issue_value}, "lte": ${this.end_issue_value} } } },`
         } else {
           // se añade filtro para numero exacto
-          searchissue_string = `{ "term": { "document_number": ${this.start_issue_value} } },`
+          searchissue_string = `{ "match": { "document_number": ${this.start_issue_value} } },`
         }
       } else {
         // no está activo el filtro por numero de boletin
@@ -113,7 +108,7 @@ export class SearchboxComponent {
           searchdate_string = `{ "range": { "publication_date": { "gte": "${this.start_date_value}T00:00:00.000000Z", "lte": "${this.end_date_value}T00:00:00.000000Z" } } },`
         } else {
           // se añade filtro para fecha exacta
-          searchdate_string = `{ "term": { "publication_date": "${this.start_date_value}T00:00:00.000000Z" } },`
+          searchdate_string = `{ "match": { "publication_date": "${this.start_date_value}T00:00:00.000000Z" } },`
         }
       } else {
         // no está activo el filtro por fecha
@@ -127,32 +122,26 @@ export class SearchboxComponent {
           searchpage_string = `{ "range": { "document_page": { "gte": ${this.start_page_value}, "lte": ${this.end_page_value} } } },`
         } else {
           // se añade filtro para pagina exacta
-          searchpage_string = `{ "term": { "document_page": ${this.start_page_value} } },`
+          searchpage_string = `{ "match": { "document_page": ${this.start_page_value} } },`
         }
       } else {
         // no está activo el filtro por pagina
         searchpage_string = '';
       }
-
-      if (this.selectedDocumentType != "All") {
-        searchpublication_string = `{ "term": { "publication_id": "${this.selectedDocumentType}" } },`
-      } else {
-        searchpublication_string = '';
-      }
-
     }
 
-    console.log("---------------> "+this.selectedDocumentType)
+    // Search by publication
+    if (this.selectedDocumentType != "All") {
+      searchpublication_string = `{ "match": { "publication_id": "${this.selectedDocumentType}" } },`
+    } else {
+      searchpublication_string = '';
+    }
 
     const query: string = `{
       "query": {
         "bool": {
           "must": [
-            ${searchissue_string}
-            ${searchdate_string}
-            ${searchpage_string}
-            ${searchpublication_string}
-            ${searchterm_string}
+            ${searchissue_string} ${searchdate_string} ${searchpage_string} ${searchpublication_string} ${searchterm_string}
           ],
           "must_not": [],
           "should": []
@@ -179,9 +168,7 @@ export class SearchboxComponent {
     // pagination
     this.currentPage = 1;
 
-
     this.searchTerm = formData.searchTerm;
-    this.selectedDocumentType = formData.selectedDocumentType;
 
     this.query = this.buildQuery()//{ "query": { "match": { "announcement_summary": formData.searchTerm } } }
 
@@ -276,6 +263,10 @@ export class SearchboxComponent {
   }
   check_page_ranking(e: any) {
     console.log(e);
+  }
+
+  formatScore(score: number): string {
+    return score.toFixed(2);
   }
 
 }

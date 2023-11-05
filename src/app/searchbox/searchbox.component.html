@@ -31,7 +31,7 @@
     <div class="mt-6 collapse collapse-arrow bg-base-200">
       <input name="collapse_main" type="checkbox" class="peer" [(ngModel)]="collapse_main_status"/>
 
-      <div class="collapse-title text-secondary font">
+      <div class="collapse-title text-secondary font-semibold">
         <div>
           <p>Do you fancy adding some filters to your query?</p>
         </div>
@@ -141,8 +141,8 @@
             </div>
           </div>
           <hr>
-          <!-- Ranking -->
-          <div class="collapse  py-2">
+          <!-- Ranking Not used, hidden-->
+          <div class="hidden collapse  py-2">
             <input name="collapse_ranking" type="checkbox" class="peer"  [(ngModel)]="collapse_ranking_status"/>
             <div
               class="collapse-title bg-neutral-100  text-gray-400 peer-checked:bg-neutral-100 peer-checked:text-primary">
@@ -196,13 +196,27 @@
             lg:grid-cols-3 lg:gap-8 ">
 
 
+
+
+
   <div *ngFor="let element of pagedResults" class="card shadow-xl">
     <div class="card-body">
       <h2 class="card-title">
-        <p class="line-clamp-1">{{ element._source.announcement_summary }}</p>
+        <p class="line-clamp-1 text-primary font-bold">{{ element._source.announcement_summary }}</p>
       </h2>
-      <h3 class="line-clamp-1">{{element._source.announcement_issuer}}</h3>
-      <div class="join flex justify-between items-center w-full">
+      <h3 class="line-clamp-1 mb-0 pb-0 font-semibold">{{element._source.announcement_issuer}}</h3>
+
+        <div class=" text-sm breadcrumbs mt-0 pt-0 font-light">
+          <ul>
+            <li>{{ element._source.announcement_section }}</li>
+            <li>{{ element._source.announcement_subsection }}</li>
+          </ul>
+        </div>
+
+      <hr>
+
+      <!--
+      <div class="join flex justify-between items-center w-full  bg-neutral-100">
         <h3 class="badge badge-primary badge-md">
           {{ element._source.publication_id }} {{
           element._source.document_number
@@ -212,9 +226,24 @@
       </div>
 
       <p>Relevance Score: {{ element._score }}</p>
-      <p class="line-clamp-3 mt-5">{{ element._source.announcement_summary }}</p>
-      <div class="card-actions justify-end">
-        <button class="btn btn-primary">Open</button>
+      -->
+      <div>
+        <p class="line-clamp-3 my-4 text-neutral-400">{{ element._source.announcement_summary }}</p>
+        <div class="card-actions justify-between">
+          <div class="text-xs text-primary breadcrumbs mt-6">
+            <ul>
+              <li>{{ element._source.publication_id }}</li>
+              <li> Issue {{ element._source.document_number }}</li>
+              <li> Page {{ element._source.document_page }}</li>
+            </ul>
+          </div>
+
+          <div class="lg:tooltip" data-tip="Relevance Score">
+            <svg class="ml-5 mr-4 mt-2" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 640 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M353.8 54.1L330.2 6.3c-3.9-8.3-16.1-8.6-20.4 0L286.2 54.1l-52.3 7.5c-9.3 1.4-13.3 12.9-6.4 19.8l38 37-9 52.1c-1.4 9.3 8.2 16.5 16.8 12.2l46.9-24.8 46.6 24.4c8.6 4.3 18.3-2.9 16.8-12.2l-9-52.1 38-36.6c6.8-6.8 2.9-18.3-6.4-19.8l-52.3-7.5zM256 256c-17.7 0-32 14.3-32 32V480c0 17.7 14.3 32 32 32H384c17.7 0 32-14.3 32-32V288c0-17.7-14.3-32-32-32H256zM32 320c-17.7 0-32 14.3-32 32V480c0 17.7 14.3 32 32 32H160c17.7 0 32-14.3 32-32V352c0-17.7-14.3-32-32-32H32zm416 96v64c0 17.7 14.3 32 32 32H608c17.7 0 32-14.3 32-32V416c0-17.7-14.3-32-32-32H480c-17.7 0-32 14.3-32 32z"/></svg>
+            <span class="ml-4 mr-4"> {{formatScore(element._score)}}</span>
+          </div>
+          <button class="btn btn-primary"><a [href]="element._source.document_url" target="_blank">Open</a></button>
+        </div>
       </div>
     </div>
   </div>
