@@ -105,10 +105,12 @@ export class SearchboxComponent {
         // esta activo el filtro por fecha
         if (this.filter_date_by_range) {
           // se añade filtro para rango de fechas
-          searchdate_string = `{ "range": { "publication_date": { "gte": "${this.start_date_value}T00:00:00.000000Z", "lte": "${this.end_date_value}T00:00:00.000000Z" } } },`
+          //searchdate_string = `{ "range": { "publication_date": { "gte": "${this.start_date_value}T00:00:00.000000Z", "lte": "${this.end_date_value}T00:00:00.000000Z" } } },`
+          searchdate_string = `{ "range": { "publication_date": { "gte": "${this.start_date_value}", "lte": "${this.end_date_value}" } } },`
         } else {
           // se añade filtro para fecha exacta
-          searchdate_string = `{ "match": { "publication_date": "${this.start_date_value}T00:00:00.000000Z" } },`
+          //searchdate_string = `{ "match": { "publication_date": "${this.start_date_value}T00:00:00.000000Z" } },`
+          searchdate_string = `{ "match": { "publication_date": "${this.start_date_value}" } },`
         }
       } else {
         // no está activo el filtro por fecha
