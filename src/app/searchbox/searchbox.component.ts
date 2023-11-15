@@ -6,9 +6,7 @@ import { timer, throwError } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-// FIXME: Busqueda por fecha no funciona
-// TODO: Por ahora busca por contenido del sumario, añadir busqueda por categorias (oposiciones, concursos, etc.)
-// TODO: Memoria
+// FIXME: Recuadro de busqueda por fecha inicializado a fecha actual
 
 @Component({
   selector: 'app-searchbox',
@@ -70,6 +68,7 @@ export class SearchboxComponent {
   buildQuery(): string {
 
     let searchterm_string = '';
+    //let searchterm_multiple_string = '';
     let searchpublication_string = '';
     let searchissue_string = '';
     let searchdate_string = '';
@@ -82,6 +81,10 @@ export class SearchboxComponent {
     } else {
       searchterm_string = `{ "match": { "announcement_summary": "${this.searchTerm}" } }`
     }
+
+
+    //searchterm_multiple_string = `[ { "match": {  "announcement_section": "${this.searchTerm}" } }, { "match": { "announcement_subsection": "${this.searchTerm}" } }, { "match": { "announcement_issuer": "${this.searchTerm}" } }, { "match": { "announcement_summary": "${this.searchTerm}" } }, { "match": { "announcement_content": "${this.searchTerm}" } } ]`
+
 
     // Search Filters
     if (this.collapse_main_status) {
@@ -146,7 +149,8 @@ export class SearchboxComponent {
             ${searchissue_string} ${searchdate_string} ${searchpage_string} ${searchpublication_string} ${searchterm_string}
           ],
           "must_not": [],
-          "should": []
+          "should": [
+          ]
         }
       },
       "from": 0,
@@ -209,7 +213,7 @@ export class SearchboxComponent {
           this.search_result_success = false;
         });
         this.updatePagedResults();
-        console.log("RESULTADOS: ", this.results);
+        //console.log("RESULTADOS: ", this.results);
       });
   }
 
